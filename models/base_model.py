@@ -12,7 +12,7 @@ class BaseModel:
         if kwargs:
             for key, value in kwargs.items():
                 if key != '__class__':
-                    if key == 'created_at' or key == 'updated_at':
+                    if key in ('created_at', 'updated_at'):
                         value = datetime.fromisoformat(value)
                     setattr(self, key, value)
         else:
@@ -21,13 +21,13 @@ class BaseModel:
             self.updated_at = self.created_at
 
     def __str__(self):
-        return f"[{self.__class__.__name__}] {self.id} {self.__dict__}"
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
         """
         updates the public instance attribute with the current datetime
         """
-        self.update_at = datetime.now()
+        self.updated_at = datetime.now()
 
     def to_dict(self):
         """Returns a dict containing all keys/values of __dict__"""
