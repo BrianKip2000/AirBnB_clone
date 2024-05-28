@@ -30,6 +30,7 @@ class BaseModel:
         updates the public instance attribute with the current datetime
         """
         self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """Returns a dict containing all keys/values of __dict__"""

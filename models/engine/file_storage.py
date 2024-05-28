@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""Importing models and json for serialization"""
 import json
 import models
 
@@ -22,7 +23,7 @@ class FileStorage:
         dict = {}
         for id, objs in self.__objects.items():
             dict[id] = objs.to_dict()
-        with open(self.__file_path, mode='w', encoding='útf-8') as file:
+        with open(self.__file_path, mode='w', encoding='utf-8') as file:
             json.dump(dict, file)
 
     def reload(self):
