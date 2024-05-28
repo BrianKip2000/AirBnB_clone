@@ -27,7 +27,6 @@ class FileStorage:
 
     def reload(self):
         """Deserializes the json file to __objects"""
-        
         try:
             with open(self.__file_path, 'r') as file:
                 obj = json.load(file)
