@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import json
-import os
+import models
 
 
 class FileStorage:
@@ -19,19 +19,20 @@ class FileStorage:
 
     def save(self):
         """Serializes __objects to json file"""
-        obj_dict = os.path.dirname(self.__file_path)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        with open(self.__file_path, "w") as file:
-            json.dump(self.__objects, file)
+        dict = {}
+        for id, objs in self.__objects.items():
+            dict[id] = objs.to_dict()
+            with open(self.__file_path, mode='w', encoding='útf-8') as file:
+                json.dump(dict, file)
 
     def reload(self):
         """Deserializes the json file to __objects"""
-        if os.path.exists(self.__file_path):
+        
+        try:
             with open(self.__file_path, 'r') as file:
-                obj_dict = json.load(file)
-                for key, value in obj_dict.items():
-                    class_name, obj_id = key.split()
-                    obj_class = globals()[class_name]
-                    obj = obj_class.from_dict(value)
-                    self.__obj[key] = obj
+                obj = json.load(file)
+            for key, value in obj.items():
+                name = models.allclasses[value["__class__"]](**value)
+                self.__objects[key] = name
+        except Exception:
+            pass
