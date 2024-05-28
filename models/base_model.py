@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 from models import storage
 
+
 class BaseModel:
     """Base class for the entire HBNB project"""
     def __init__(self, *args, **kwargs):
