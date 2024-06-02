@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""Cmd module for console project"""
 import cmd
 
 
