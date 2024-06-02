@@ -27,7 +27,7 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
             return
-        
+
         if len(args) == 1:
             print("** instance id missing **")
             return
@@ -110,7 +110,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             setattr(instance, args[2], args[3])
             instance.save()
-       
+
     def do_quit(self, arg):
         """Quits the program"""
         return True
@@ -123,6 +123,47 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Does nothing on empty line + enter"""
         pass
+
+    def default(self, arg):
+        """Default behavior for cmd"""
+        args = arg.split('.')
+        if len(args) == 1:
+            cmd = args[0]
+            if cmd == 'all()':
+                self.do_all()
+            elif cmd == 'count()':
+                print(len(storage.all()))
+            elif cmd == 'show()':
+                print("** instance id missing **")
+            elif cmd == 'destroy()':
+                print("** instance id missing **")
+            elif cmd == 'update()':
+                print("** instance id missing **")
+            elif cmd == 'update()':
+                print("** attribute name missing **")
+            elif cmd == 'update()':
+                print("** value missing **")
+            else:
+                print("*** Unknown syntax: {}".format(arg))
+        elif len(args) == 2:
+            cmd = args[0] + ' ' + args[1]
+            if cmd == 'all()':
+                self.do_all(args[0])
+            elif cmd == 'count()':
+                self.do_count(args[0])
+            elif cmd == 'show()':
+                self.do_show(args[0] + ' ' + args[1])
+            elif cmd == 'destroy()':
+                self.do_destroy(args[0] + ' ' + args[1])
+            elif cmd == 'update()':
+                self.do_update(args[0] + ' ' + args[1])
+            elif cmd == 'update()':
+                self.do_update(args[0] + ' ' + args[1] + ' ' + args[2])
+            else:
+                print("*** Unknown syntax: {}".format(arg))
+        else:
+            print("*** Unknown syntax: {}".format(arg))
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
