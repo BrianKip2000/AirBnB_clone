@@ -1,19 +1,12 @@
 #!/usr/bin/python3
-"""
-Serializes instances to a JSON file and
-deserializes JSON file to instances.
-"""
-
 import json
 import os
-from models.base_model import BaseModel
 
 
 class FileStorage:
-    """The file storage engine class, that is;
-    A class that serialize and deserialize instances to a JSON file
     """
-    __file_path = "file.json"
+    """
+    __file_path = 'file.json'
     __objects = {}
 
     def all(self):
@@ -41,7 +34,6 @@ class FileStorage:
     def reload(self):
         """Deserializes the JSON file to __objects if it exists"""
         if os.path.exists(type(self).__file_path) is True:
-            return
             try:
                 with open(type(self).__file_path, "r") as file:
                     new_obj = json.load(file)
