@@ -9,7 +9,7 @@ from models import storage
 class HBNBCommand(cmd.Cmd):
     """Console module"""
     prompt = "(hbnb) "
-    variable_storage = ['BaseModel']
+    variable_storage = {'BaseModel': BaseModel}
 
     def do_create(self, arg):
         """Creates an instance of the specified class"""
