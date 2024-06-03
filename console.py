@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Cmd module for console project"""
 import cmd
+import shlex
 from models.base_model import BaseModel
 from models import storage
 
@@ -12,7 +13,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """Creates an instance of the specified class"""
-        args = arg.split(' ')
+        args = shlex.split(arg)
         if len(args) == 0:
             print("** class name missing **")
             return
@@ -28,7 +29,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         """Prints string representation of an instance"""
-        args = arg.split(" ")
+        args = shlex.split(arg)
         if len(args) == 0:
             print("** class name missing **")
             return
@@ -36,7 +37,7 @@ class HBNBCommand(cmd.Cmd):
         class_name = arg[0]
 
         if class_name not in self.variable_storage:
-            print("** class name missing **")
+            print("** class doesn't exist **")
             return
 
         if len(args) < 2:
@@ -54,7 +55,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, arg):
         """Deletes an instance"""
-        args = arg.split()
+        args = shlex.split(arg)
         if len(args) == 0:
             print("** class name missing **")
             return
@@ -71,6 +72,7 @@ class HBNBCommand(cmd.Cmd):
 
         class_name, obj_id = args[0], args[1]
         key = f"{class_name}.{obj_id}"
+
 
         if key in storage.all():
             del storage.all()[key]
