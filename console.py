@@ -9,7 +9,7 @@ from models import storage
 class HBNBCommand(cmd.Cmd):
     """Console module"""
     prompt = "(hbnb) "
-    variable_storage = {"BaseModel": BaseModel}
+    variable_storage = ['BaseModel']
 
     def do_create(self, arg):
         """Creates an instance of the specified class"""
@@ -34,7 +34,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        class_name = arg[0]
+        class_name = args[0]
 
         if class_name not in self.variable_storage:
             print("** class doesn't exist **")
