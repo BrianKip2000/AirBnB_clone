@@ -82,6 +82,31 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** no instance found **")
 
+    def do_all(self, arg):
+        """Prints all string representation
+          of all instances based or not on the class name"""
+        args = shlex.split(arg)
+        all_instances = storage.all()
+        result = []
+
+        if len(args) == 0:
+            for obj in all_instances.values():
+                result.append(str(obj))
+
+        else:
+            class_name = args[0]
+
+            if class_name not in self.variable_storage:
+                print("** class does't exist **")
+                return
+
+            # prints instances of the specified class
+            for obj in all_instances.values():
+                if obj.__class__.__name__ == class_name:
+                    result.append(str(obj))
+
+        print(result)
+
     def do_quit(self, arg):
         """Quits the program"""
         return True
