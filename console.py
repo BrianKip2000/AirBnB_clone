@@ -5,12 +5,12 @@ import shlex
 from models.base_model import BaseModel
 from models import storage
 import models
-
+from models import User
 
 class HBNBCommand(cmd.Cmd):
     """Console module"""
     prompt = "(hbnb) "
-    variable_storage = {'BaseModel': BaseModel}
+    variable_storage = {'BaseModel': BaseModel, 'user': User}
 
     def do_create(self, arg):
         """Creates an instance of the specified class"""
