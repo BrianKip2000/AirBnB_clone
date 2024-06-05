@@ -98,7 +98,7 @@ class HBNBCommand(cmd.Cmd):
             class_name = args[0]
 
             if class_name not in self.variable_storage:
-                print("** class does't exist **")
+                print("** class doesn't exist **")
                 return
 
             # prints instances of the specified class
