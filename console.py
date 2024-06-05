@@ -4,6 +4,7 @@ import cmd
 import shlex
 from models.base_model import BaseModel
 from models import storage
+import models
 
 
 class HBNBCommand(cmd.Cmd):
@@ -106,49 +107,39 @@ class HBNBCommand(cmd.Cmd):
                     result.append(str(obj))
 
         print(result)
-    
-    def do_update(self, arg):
-        """Updates instance based on class name and id"""
-        args = shlex.split(arg)
-        if len(args) == 0:
+
+    def do_update(self, argument):
+        """Updates an instance based on the class name and id """
+        tokensU = shlex.split(argument)
+        if len(tokensU) == 0:
             print("** class name missing **")
             return
-
-        class_name = args[0]
-
-        if class_name not in self.variable_storage:
-            print("** class doesn't exist **")
-            return
-
-        if len(args) < 2:
+        elif len(tokensU) == 1:
             print("** instance id missing **")
             return
-
-        obj_id = args[1]
-        key = f"{class_name}.{obj_id}"
-        obj = storage.all()
-
-        try:
-            instance_a = obj[key]
-        except KeyError:
-            print("** no instance found **")
-
-        # if key not in storage.all():
-        #     print("** no instance found **")
-        #     return
-
-        if len(args) < 3:
+        elif len(tokensU) == 2:
             print("** attribute name missing **")
             return
-
-        if len(args) < 4:
+        elif len(tokensU) == 3:
             print("** value missing **")
             return
-
-
-        setattr(instance_a, args[2], args[3])
-        storage.save()
-
+        elif tokensU[0] not in self.variable_storage:
+            print("** class doesn't exist **")
+            return
+        keyI = tokensU[0] + "." + tokensU[1]
+        dicI = models.storage.all()
+        try:
+            instanceU = dicI[keyI]
+        except KeyError:
+            print("** no instance found **")
+            return
+        try:
+            typeA = type(getattr(instanceU, tokensU[2]))
+            tokensU[3] = typeA(tokensU[3])
+        except AttributeError:
+            pass
+        setattr(instanceU, tokensU[2], tokensU[3])
+        models.storage.save()
     def do_quit(self, arg):
         """Quits the program"""
         return True
