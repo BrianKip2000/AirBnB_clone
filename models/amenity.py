@@ -3,7 +3,7 @@
 from models.base_model import BaseModel
 
 
-class Amentity(BaseModel):
+class Amenity(BaseModel):
     """Class with pub attr name"""
     name = ''
 
