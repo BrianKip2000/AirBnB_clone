@@ -30,6 +30,7 @@ class FileStorage:
     def reload(self):
         """Reloads the stored objects"""
         from models.base_model import BaseModel
+        from models.user import User
         if not os.path.isfile(FileStorage.__file_path):
             return
         with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
@@ -38,10 +39,12 @@ class FileStorage:
             # Check if the loaded data is a dictionary
             if isinstance(obj_dict, dict):
                 for key, value in obj_dict.items():
-                    class_name, obj_id = key.split('.')
-                    cls = eval(class_name)  # Assuming the class is already imported
-                    instance = cls(**value)
-                    FileStorage.__objects[key] = instance
+                    class_name = value['__class__']
+                    if class_name == 'User':
+                        cls = User
+                    else:
+                        cls = BaseModel
+                    FileStorage.__objects[key] = cls(**value)
             else:
                 raise TypeError("Expected a dictionary in the JSON file, but got a list")
 
