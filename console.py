@@ -7,6 +7,7 @@ from models import storage
 import models
 from models.user import User
 
+
 class HBNBCommand(cmd.Cmd):
     """Console module"""
     prompt = "(hbnb) "
@@ -15,11 +16,13 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, arg):
         """Creates an instance of the specified class"""
         args = shlex.split(arg)
+
         if len(args) == 0:
             print("** class name missing **")
             return
 
         class_name = args[0]
+
         if class_name not in self.variable_storage:
             print("** class doesn't exist **")
             return
@@ -31,6 +34,7 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, arg):
         """Prints string representation of an instance"""
         args = shlex.split(arg)
+
         if len(args) == 0:
             print("** class name missing **")
             return
@@ -57,6 +61,7 @@ class HBNBCommand(cmd.Cmd):
     def do_destroy(self, arg):
         """Deletes an instance"""
         args = shlex.split(arg)
+
         if len(args) == 0:
             print("** class name missing **")
             return
@@ -73,7 +78,6 @@ class HBNBCommand(cmd.Cmd):
 
         class_name, obj_id = args[0], args[1]
         key = f"{class_name}.{obj_id}"
-
 
         if key in storage.all():
             del storage.all()[key]
@@ -111,35 +115,45 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, argument):
         """Updates an instance based on the class name and id """
         tokensU = shlex.split(argument)
+
         if len(tokensU) == 0:
             print("** class name missing **")
             return
+
         elif len(tokensU) == 1:
             print("** instance id missing **")
             return
+
         elif len(tokensU) == 2:
             print("** attribute name missing **")
             return
+
         elif len(tokensU) == 3:
             print("** value missing **")
             return
+
         elif tokensU[0] not in self.variable_storage:
             print("** class doesn't exist **")
             return
+
         keyI = tokensU[0] + "." + tokensU[1]
         dicI = models.storage.all()
+
         try:
             instanceU = dicI[keyI]
         except KeyError:
             print("** no instance found **")
             return
+
         try:
             typeA = type(getattr(instanceU, tokensU[2]))
             tokensU[3] = typeA(tokensU[3])
         except AttributeError:
             pass
+
         setattr(instanceU, tokensU[2], tokensU[3])
         models.storage.save()
+
     def do_quit(self, arg):
         """Quits the program"""
         return True
@@ -153,6 +167,6 @@ class HBNBCommand(cmd.Cmd):
         """Does nothing on empty line + enter"""
         pass
 
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
-
