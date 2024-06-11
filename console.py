@@ -6,12 +6,20 @@ from models.base_model import BaseModel
 from models import storage
 import models
 from models.user import User
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
     """Console module"""
     prompt = "(hbnb) "
-    variable_storage = {'BaseModel': BaseModel, 'User': User}
+    variable_storage = {
+            'BaseModel': BaseModel, 'User': User,
+            'City': City, 'Place': Place,
+            'Review': Review, 'Amenity': Amenity
+            }
 
     def do_create(self, arg):
         """Creates an instance of the specified class"""

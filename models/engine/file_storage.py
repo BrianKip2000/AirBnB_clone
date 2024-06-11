@@ -31,6 +31,13 @@ class FileStorage:
         """Reloads the stored objects"""
         from models.base_model import BaseModel
         from models.user import User
+        from models.amenity import Amenity
+        from models.city import City
+        from models.place import Place
+        from models.state import State
+        from models.review import Review
+
+
         if not os.path.isfile(FileStorage.__file_path):
             return
         with open(FileStorage.__file_path, "r", encoding="utf-8") as f:
@@ -42,8 +49,18 @@ class FileStorage:
                     class_name = value['__class__']
                     if class_name == 'User':
                         cls = User
-                    else:
+                    elif class_name == 'BaseModel':
                         cls = BaseModel
+                    elif class_name == 'Review':
+                        cls = Review
+                    elif class_name == 'State':
+                        cls = State
+                    elif class_name == 'Place':
+                        cls = Place
+                    elif class_name == 'Amenity':
+                        cls = Amenity
+                    else:
+                        cls = City
                     FileStorage.__objects[key] = cls(**value)
             else:
                 raise TypeError("Expected a dictionary in the JSON file, but got a list")
