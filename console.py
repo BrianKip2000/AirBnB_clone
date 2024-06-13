@@ -36,8 +36,8 @@ class HBNBCommand(cmd.Cmd):
             return
 
         new_instance = self.variable_storage[class_name]()
-        print(new_instance.id)
         new_instance.save()
+        print(new_instance.id)
 
     def do_show(self, arg):
         """Prints string representation of an instance"""
@@ -182,25 +182,22 @@ class HBNBCommand(cmd.Cmd):
         setattr(instanceU, tokensU[2], tokensU[3])
         models.storage.save()
 
-    def do_count(self, args):
-        """Counts the number of instances"""
-        commands = shlex.split(args)
+    def do_count(self, arg):
+        """Counts the number of instances of a given class"""
+        args = shlex.split(arg)
 
-        if args:
-            class_name = commands[0]
-        
-        count = 0
-
-        if commands:
-            if class_name in self.variable_storage:
-                for obj in storage.all().values():
-                    if obj.__class__.__name__ == args:
-                        count += 1
-                print(count)
-            else:
-                print("** invalid class name **")
-        else:
+        if not args:
             print("** class name missing **")
+            return
+
+        class_name = args[0]
+
+        if class_name not in self.variable_storage:
+            print("** class doesn't exist **")
+            return
+
+        count = sum(1 for obj in storage.all().values() if obj.__class__.__name__ == class_name)
+        print(count)
 
     def default(self, args):
         """Default if commands are not in class methods"""
