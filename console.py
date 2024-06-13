@@ -10,6 +10,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+from models.state import State
 
 
 class HBNBCommand(cmd.Cmd):
@@ -18,7 +19,8 @@ class HBNBCommand(cmd.Cmd):
     variable_storage = {
             'BaseModel': BaseModel, 'User': User,
             'City': City, 'Place': Place,
-            'Review': Review, 'Amenity': Amenity
+            'Review': Review, 'Amenity': Amenity,
+            'State': State
             }
 
     def do_create(self, arg):
