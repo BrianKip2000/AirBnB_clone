@@ -10,7 +10,6 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
-from models.state import State
 
 
 class HBNBCommand(cmd.Cmd):
@@ -19,8 +18,7 @@ class HBNBCommand(cmd.Cmd):
     variable_storage = {
             'BaseModel': BaseModel, 'User': User,
             'City': City, 'Place': Place,
-            'Review': Review, 'Amenity': Amenity,
-            'State': State
+            'Review': Review, 'Amenity': Amenity
             }
 
     def do_create(self, arg):
@@ -98,8 +96,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, arg):
-        """Prints all string representation
-          of all instances based or not on the class name"""
+        """Prints all string representation of all instances of a given class"""
         args = shlex.split(arg)
         all_instances = storage.all()
         result = []
@@ -107,20 +104,41 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             for obj in all_instances.values():
                 result.append(str(obj))
-
         else:
             class_name = args[0]
-
             if class_name not in self.variable_storage:
                 print("** class doesn't exist **")
                 return
+            # Retrieve all instances of the specified class using <class name>.all()
+            result = [str(obj) for obj in all_instances.values() if obj.__class__.__name__ == class_name]
+
+            print(result)
+
+    
+    #def do_all(self, arg):
+     #   """Prints all string representation
+         # of all instances based or not on the class name"""
+      #  args = shlex.split(arg)
+       # all_instances = storage.all()
+        #result = []
+
+        #if len(args) == 0:
+         #   for obj in all_instances.values():
+          #      result.append(str(obj))
+
+        #else:
+         #   class_name = args[0]
+
+          #  if class_name not in self.variable_storage:
+           #     print("** class doesn't exist **")
+            #    return
 
             # prints instances of the specified class
-            for obj in all_instances.values():
-                if obj.__class__.__name__ == class_name:
-                    result.append(str(obj))
+            #for obj in all_instances.values():
+             #   if obj.__class__.__name__ == class_name:
+              #      result.append(str(obj))
 
-        print(result)
+        #print(result)
 
     def do_update(self, argument):
         """Updates an instance based on the class name and id """
@@ -163,6 +181,31 @@ class HBNBCommand(cmd.Cmd):
 
         setattr(instanceU, tokensU[2], tokensU[3])
         models.storage.save()
+
+    def default(self, args):
+        """Default if commands are not in class methods"""
+        arg = args.split('.') #split the class_name(User) and method(all)
+
+        #arg[0] = User
+        #arg[1] = all()
+
+        incoming_class = arg[0]
+        #Now, arg[1] has all and ()
+        #if we split using (, and ) we will have the method name
+        incoming_method = arg[1].split('(')
+        stated_method = incoming_method[0]
+
+        possible_dict = {
+                'all': self.do_all,
+                'update': self.do_update,
+                'destroy': self.do_destroy,
+                'create': self.do_create
+                }
+        if stated_method in possible_dict.keys():
+            return possible_dict[stated_method](f"{incoming_class} {''}")
+        print("Missing")
+        return False
+
 
     def do_quit(self, arg):
         """Quits the program"""
