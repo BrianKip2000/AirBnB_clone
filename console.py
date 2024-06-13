@@ -182,6 +182,26 @@ class HBNBCommand(cmd.Cmd):
         setattr(instanceU, tokensU[2], tokensU[3])
         models.storage.save()
 
+    def do_count(self, args):
+        """Counts the number of instances"""
+        commands = shlex.split(args)
+
+        if args:
+            class_name = commands[0]
+        
+        count = 0
+
+        if commands:
+            if class_name in self.variable_storage:
+                for obj in storage.all().values():
+                    if obj.__class__.__name__ == args:
+                        count += 1
+                print(count)
+            else:
+                print("** invalid class name **")
+        else:
+            print("** class name missing **")
+
     def default(self, args):
         """Default if commands are not in class methods"""
         arg = args.split('.') #split the class_name(User) and method(all)
@@ -199,7 +219,8 @@ class HBNBCommand(cmd.Cmd):
                 'all': self.do_all,
                 'update': self.do_update,
                 'destroy': self.do_destroy,
-                'create': self.do_create
+                'create': self.do_create,
+                'count': self.do_count
                 }
         if stated_method in possible_dict.keys():
             return possible_dict[stated_method](f"{incoming_class} {''}")
