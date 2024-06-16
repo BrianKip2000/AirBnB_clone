@@ -115,7 +115,7 @@ class HBNBCommand(cmd.Cmd):
             result = [str(obj) for obj in all_instances.values() if obj.__class__.__name__ == class_name]
 
             print(result)
-    
+
     def do_update(self, argument):
         """Updates an instance based on the class name and id """
         tokensU = shlex.split(argument)
@@ -178,7 +178,7 @@ class HBNBCommand(cmd.Cmd):
     def default(self, args):
         """Default method if commands are not in class methods"""
         arg = args.split('.')
-    
+
         if len(arg) < 2:
             print("** invalid command **")
             return
@@ -187,8 +187,9 @@ class HBNBCommand(cmd.Cmd):
         method_call = arg[1]
 
         if class_name not in self.variable_storage:
-           print("** class doesn't exist **")
-           return
+            print("** class doesn't exist **")
+            return
+
         method_args = method_call.split('(')
         method_name = method_args[0]
 
@@ -204,14 +205,35 @@ class HBNBCommand(cmd.Cmd):
                 self.do_destroy(f"{class_name} {instance_id}")
             else:
                 print("** instance id missing **")
+        elif method_name == "update":
+            if len(method_args) > 1:
+                update_args = method_args[1].rstrip(')').split(',')
+                if len(update_args) != 3:
+                    print("** some values missing **")
+                else:
+                    instance_id = update_args[0].strip()
+                    attribute_name = update_args[1].strip()
+
+                    #Join all parts of attribute_value in case it contains commas
+                    attribute_value = ','.join(update_args[2:]).strip()
+
+                    # Check if attribute_value is quoted and strip the quotes
+                    if (attribute_value.startswith('"') and attribute_value.endswith('"')) or \
+                            (attribute_value.startswith("'") and attribute_value.endswith("'")):
+                                attribute_value = attribute_value[1:-1]
+
+                    self.do_update(f"{class_name} {instance_id} {attribute_name} '{attribute_value}'")
+            else:
+                print("** instance id missing **")
+
         else:
             possible_dict = {
-                'all': self.do_all,
-                'update': self.do_update,
-                'destroy': self.do_destroy,
-                'create': self.do_create,
-                'count': self.do_count
-                }
+                    'all': self.do_all,
+                    'update': self.do_update,
+                    'destroy': self.do_destroy,
+                    'create': self.do_create,
+                    'count': self.do_count,
+                    }
 
             if method_name in possible_dict:
                 if len(method_args) > 1:
@@ -223,7 +245,6 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     cmd_args = class_name
                 possible_dict[method_name](cmd_args)
-            
             else:
                 print("** unknown command **")
 
