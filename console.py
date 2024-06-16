@@ -115,33 +115,7 @@ class HBNBCommand(cmd.Cmd):
             result = [str(obj) for obj in all_instances.values() if obj.__class__.__name__ == class_name]
 
             print(result)
-
     
-    #def do_all(self, arg):
-     #   """Prints all string representation
-         # of all instances based or not on the class name"""
-      #  args = shlex.split(arg)
-       # all_instances = storage.all()
-        #result = []
-
-        #if len(args) == 0:
-         #   for obj in all_instances.values():
-          #      result.append(str(obj))
-
-        #else:
-         #   class_name = args[0]
-
-          #  if class_name not in self.variable_storage:
-           #     print("** class doesn't exist **")
-            #    return
-
-            # prints instances of the specified class
-            #for obj in all_instances.values():
-             #   if obj.__class__.__name__ == class_name:
-              #      result.append(str(obj))
-
-        #print(result)
-
     def do_update(self, argument):
         """Updates an instance based on the class name and id """
         tokensU = shlex.split(argument)
@@ -202,30 +176,46 @@ class HBNBCommand(cmd.Cmd):
         print(count)
 
     def default(self, args):
-        """Default if commands are not in class methods"""
-        arg = args.split('.') #split the class_name(User) and method(all)
+        """Default method if commands are not in class methods"""
+        arg = args.split('.')
+    
+        if len(arg) < 2:
+            print("** invalid command **")
+            return
 
-        #arg[0] = User
-        #arg[1] = all()
+        class_name = arg[0]
+        method_call = arg[1]
 
-        incoming_class = arg[0]
-        #Now, arg[1] has all and ()
-        #if we split using (, and ) we will have the method name
-        incoming_method = arg[1].split('(')
-        stated_method = incoming_method[0]
+        if class_name not in self.variable_storage:
+           print("** class doesn't exist **")
+           return
+        method_args = method_call.split('(')
+        method_name = method_args[0]
 
-        possible_dict = {
+        if method_name == "show":
+            if len(method_args) > 1:
+                instance_id = method_args[1].rstrip(')')
+                self.do_show(f"{class_name} {instance_id}")
+            else:
+                print("** instance id missing **")
+        else:
+            possible_dict = {
                 'all': self.do_all,
                 'update': self.do_update,
                 'destroy': self.do_destroy,
                 'create': self.do_create,
                 'count': self.do_count
                 }
-        if stated_method in possible_dict.keys():
-            return possible_dict[stated_method](f"{incoming_class} {''}")
-        print("Missing")
-        return False
 
+            if method_name in possible_dict:
+                cmd_args = method_args[1].rstrip(')')
+                if cmd_args:
+                    cmd_args = f"{class_name} {cmd_args}"
+                else:
+                    cmd_args = class_name
+                possible_dict[method_name](cmd_args)
+            else:
+                print("** unknown command **")
 
     def do_quit(self, arg):
         """Quits the program"""
