@@ -207,24 +207,38 @@ class HBNBCommand(cmd.Cmd):
                 print("** instance id missing **")
         elif method_name == "update":
             if len(method_args) > 1:
-                update_args = method_args[1].rstrip(')').split(',')
-                if len(update_args) != 3:
-                    print("** some values missing **")
+                update_args = method_args[1].rstrip(')')
+                
+                # Check if update_args contains ',' to distinguish between dictionary and attribute update
+                if ',' in update_args:
+                    try:
+                        instance_id, json_dict = update_args.split(',', 1)
+                        json_dict = json_dict.strip()
+                        if not (json_dict.startswith('{') and json_dict.endswith('}')):
+                            print("** invalid dictionary representation **")
+                            return
+                        dictionary = eval(json_dict)  # Safely evaluate JSON-like string to dictionary
+                        self.do_update(f"{class_name} {instance_id} {dictionary}")
+                    except ValueError:
+                        print("** invalid format **")
+
                 else:
-                    instance_id = update_args[0].strip()
-                    attribute_name = update_args[1].strip()
+                    # Assume it's an attribute update with attribute name and value
+                    try:
+                        instance_id, attribute_name, attribute_value = update_args.split(',', 2)
+                        attribute_name = attribute_name.strip()
+                        
+                        # Check if attribute_value is quoted and strip the quotes
+                        if (attribute_value.startswith('"') and attribute_value.endswith('"')) or \
+                                (attribute_value.startswith("'") and attribute_value.endswith("'")):
+                            attribute_value = attribute_value[1:-1].strip()
 
-                    #Join all parts of attribute_value in case it contains commas
-                    attribute_value = ','.join(update_args[2:]).strip()
+                        self.do_update(f"{class_name} {instance_id} {attribute_name} '{attribute_value}'")
+                    except ValueError:
+                        print("** invalid format **")
 
-                    # Check if attribute_value is quoted and strip the quotes
-                    if (attribute_value.startswith('"') and attribute_value.endswith('"')) or \
-                            (attribute_value.startswith("'") and attribute_value.endswith("'")):
-                                attribute_value = attribute_value[1:-1]
-
-                    self.do_update(f"{class_name} {instance_id} {attribute_name} '{attribute_value}'")
             else:
-                print("** instance id missing **")
+                print("** instance id and update data missing **")
 
         else:
             possible_dict = {
