@@ -198,6 +198,12 @@ class HBNBCommand(cmd.Cmd):
                 self.do_show(f"{class_name} {instance_id}")
             else:
                 print("** instance id missing **")
+        elif method_name == "destroy":
+            if len(method_args) > 1:
+                instance_id = method_args[1].rstrip(')')
+                self.do_destroy(f"{class_name} {instance_id}")
+            else:
+                print("** instance id missing **")
         else:
             possible_dict = {
                 'all': self.do_all,
@@ -208,12 +214,16 @@ class HBNBCommand(cmd.Cmd):
                 }
 
             if method_name in possible_dict:
-                cmd_args = method_args[1].rstrip(')')
-                if cmd_args:
-                    cmd_args = f"{class_name} {cmd_args}"
+                if len(method_args) > 1:
+                    cmd_args = method_args[1].rstrip(')')
+                    if cmd_args:
+                        cmd_args = f"{class_name} {cmd_args}"
+                    else:
+                        cmd_args = class_name
                 else:
                     cmd_args = class_name
                 possible_dict[method_name](cmd_args)
+            
             else:
                 print("** unknown command **")
 
