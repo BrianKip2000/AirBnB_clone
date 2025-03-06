@@ -17,7 +17,7 @@ class BaseModel:
         prints out the class name, its id, and the dictionary at which
         it was stored
         """
-        return f"[{self.__cls__.__name__}] ({self.id}) <{self.__dict__}>"
+        return f"[{self.__class__.__name__}] ({self.id}) <{self.__dict__}>"
 
     def save(self):
         """
